@@ -1,0 +1,104 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.filter-buttons button {
+    flex-grow: 1; /* 버튼들이 동일한 비율로 공간을 차지하도록 설정 */
+    flex-basis: 0; /* 버튼이 고정 너비 대신 공간에 맞게 커지도록 설정 */
+    width: 150px; /* 버튼의 너비를 고정 */
+    height: 40px; /* 버튼의 높이를 고정 */
+    margin: 0 5px; /* 버튼 사이의 간격 조정 */
+    font-size: 18px; /* 텍스트 크기 증가 */
+    cursor: pointer;
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.product-item {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    position: relative;
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.product-info {
+    margin-top: 10px;
+}
+
+.product-info h2 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.product-info p {
+    color: gray;
+}
+
+.product-price {
+    font-size: 18px;
+    font-weight: bold;
+}
+.title-like {
+    display: flex; /* 플렉스 컨테이너로 설정 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: space-between; /* h2와 버튼을 양 끝으로 정렬 */
+    margin-bottom: 10px; /* 아래쪽 여백 추가 */
+}
+
+.title-like h2 {
+    flex-grow: 1; /* h2가 가능한 공간을 차지하도록 설정 */
+    margin: 0; /* 추가 여백 제거 */
+}
+
+.div-temp {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.like-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0; /* 불필요한 마진 제거 */
+}
+
+.like-button img {
+    width: 35px;
+    height: 35px;
+}
+
+.product-info {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.div-temp1{
+    flex: 5;
+}
+
+.div-temp2{
+    flex: 1;
+}

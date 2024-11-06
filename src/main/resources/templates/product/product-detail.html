@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- CSRF 메타 데이터 -->
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<style>
+    /* 기본 설정 */
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* 텍스트 스타일 */
+    .post-title {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #333;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+    }
+
+    .post-subtitle {
+        font-size: 1.125em;
+        color: #555;
+        line-height: 1.6;
+        text-align: justify;
+        margin-bottom: 20px;
+    }
+
+    .price {
+        font-size: 1.75em;
+        color: #e74c3c;
+        font-weight: 700;
+        margin-top: 12px;
+        display: block;
+    }
+
+    /* 이미지 스타일 */
+    .text-center img {
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        max-width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    /* 버튼 스타일 */
+    .btn {
+        font-size: 1em;
+        font-weight: 500;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-outline-secondary {
+        color: #333;
+        border: 2px solid #333;
+        background: transparent;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #17a2b8;
+        border: none;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+    .btn-danger {
+        color: #fff;
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .btn-warning {
+        color: #212529;
+        background-color: #ffc107;
+        border: none;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+    }
+
+    /* 리스트 스타일 */
+    .list-unstyled li {
+        font-size: 1em;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    /* 댓글 스타일 */
+    .comment-card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment-card .card-body {
+        padding: 15px;
+    }
+
+    .comment-author {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .comment-text {
+        font-size: 1em;
+        color: #555;
+        line-height: 1.5;
+        margin-bottom: 8px;
+    }
+
+    .comment-date {
+        font-size: 0.875em;
+        color: #888;
+    }
+
+    .comment-delete-btn {
+        font-size: 0.875em;
+        color: #fff;
+        background-color: #dc3545;
+        border: none;
+        border-radius: 3px;
+        padding: 5px 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .comment-delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    /* 댓글 작성 폼 */
+    #commentForm {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    #commentForm textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1em;
+        resize: vertical;
+        min-height: 80px;
+        margin-bottom: 10px;
+    }
+
+    #commentForm button {
+        width: 100%;
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    #commentForm button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<!-- 헤더 -->
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- 제품 이미지 -->
+        <div class="col-md-6 text-center">
+            <img th:src="@{'/uploadfile/' + ${productDTO.imageUrl}}"
+                 alt="상품 이미지"
+                 style="width: 450px; height: auto; object-fit: cover;"
+                 onerror="this.src='/uploadfile/default-image.png';">
+        </div>
+
+        <!-- 제품 정보 -->
+        <div class="col-md-6">
+            <h1 class="post-title">상품 제목 : <span th:text="${productDTO.title}"></span></h1>
+            <p class="post-subtitle">상품 설명 : <span th:text="${productDTO.content}"></span></p>
+            <p class="price"><span id="price" th:text="${productDTO.price}"></span> 원</p>
+            <script>
+                const priceElement = document.getElementById("price");
+                const price = parseInt(priceElement.textContent);
+                priceElement.textContent = price.toLocaleString();
+            </script>
+
+            <ul class="list-unstyled mt-4">
+                <li><strong>카테고리:</strong> <span th:text="${productDTO.category}"></span></li>
+                <li><strong>작성자:</strong> <span th:text="${productDTO.getUserId()}"></span></li>
+                <li><strong>등록일:</strong> <span th:text="${formattedCreateDate}"></span></li>
+                <div th:if="${formattedUpdateDate != null}">
+                    <li><strong>수정일:</strong> <span th:text="${formattedUpdateDate}"></span></li>
+                </div>
+                <li><strong>상품 상태:</strong> <span th:text="${productDTO.productCondition}"></span></li>
+                <li><strong>거래희망 시간:</strong> <span th:text="${formattedDealDate}"></span></li>
+                <li><strong>위치:</strong> <span th:text="${productDTO.location}"></span></li>
+            </ul>
+
+            <!-- 버튼 -->
+            <div class="mt-5">
+                <a href="/products" class="btn btn-outline-secondary btn-lg">목록으로 돌아가기</a>
+                <button type="button" class="btn btn-info" onclick="bookmark()">찜하기</button>
+
+                <script th:inline="javascript">
+                    function bookmark() {
+                        const likeList = {
+                            product: {
+                                id: [[${productDTO.itemCode}]]
+                            },
+                            member: {
+                                id: [[${member.id}]]
+                            }
+                        };
+
+                        fetch('/likeList', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(likeList),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data) {
+                                    alert('찜 목록에 추가되었습니다.');
+                                } else {
+                                    alert('찜 목록 추가에 실패했습니다.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('오류가 발생했습니다.');
+                            });
+                    }
+                </script>
+
+                <div th:if="${productDTO.userId == member.id}" class="d-inline-block ml-3">
+                    <button type="button" id="deleteBtn" class="btn btn-danger">삭제</button>
+                    <button type="button" id="updateBtn" class="btn btn-warning">수정</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 댓글 목록 출력 -->
+<div class="container mt-5">
+    <h2>댓글</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div th:if="${#lists.isEmpty(comments)}">
+                <p>댓글이 없습니다.</p>
+            </div>
+
+            <!-- 댓글 목록 출력 -->
+            <div th:each="comment : ${comments}" class="comment-card">
+                <div class="card-body">
+                    <h5 class="comment-author" th:text="${comment.userId}">작성자</h5>
+                    <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
+                    <p class="comment-date" th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">
+                        작성일자</p>
+                    <div th:if="${comment.userId == userid}">
+                        <button type="button" class="btn btn-danger btn-sm comment-delete-btn"
+                                th:attr="data-comment-id=${comment.commentId}, data-item-code=${productDTO.itemCode}">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 댓글 작성 폼 -->
+<div class="container mt-5" th:if="${userid != ''}">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h3>댓글 작성</h3>
+            <form id="commentForm">
+                <input type="hidden" name="itemCode" id="itemCode" th:value="${productDTO.itemCode}">
+                <div class="form-group">
+                    <label for="content">댓글 내용</label>
+                    <textarea id="content" name="content" required></textarea>
+                </div>
+                <input type="hidden" name="userId" id="userId" th:value="${userid}">
+                <button type="submit">댓글 작성</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5" th:if="${userid == ''}">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <p>댓글을 작성하려면 <a th:href="@{/member/login}">로그인</a> 해주세요.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 현재 사용자 ID 확인
+    const currentUserId = "[[${userid}]]";
+
+    // 댓글 작성 폼 제출
+    document.getElementById("commentForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const content = document.getElementById("content").value;
+        const itemCode = document.getElementById("itemCode").value;
+
+        // CSRF 토큰 및 헤더 가져오기
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch("/api/comments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken // CSRF 헤더 설정
+            },
+            body: JSON.stringify({ content: content, itemCode: itemCode })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addCommentToList(data.comment);
+                    document.getElementById("content").value = "";
+                } else {
+                    alert("댓글 작성에 실패했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    });
+
+    // 댓글 목록에 댓글 추가
+    function addCommentToList(comment) {
+        const noCommentsMessage = document.querySelector(".col-md-8 p");
+        if (noCommentsMessage && noCommentsMessage.textContent === '댓글이 없습니다.') {
+            noCommentsMessage.remove();
+        }
+
+        const commentSection = document.querySelector(".col-md-8");
+
+        const newComment = document.createElement("div");
+        newComment.classList.add("comment-card", "card", "mt-4");
+
+        newComment.innerHTML = `
+            <div class="card-body">
+                <h5 class="comment-author">${comment.userId}</h5>
+                <p class="comment-text">${comment.content}</p>
+                <p class="comment-date">${new Date(comment.createDate).toLocaleString()}</p>
+                ${comment.userId === currentUserId ? `
+                    <button type="button" class="btn btn-danger btn-sm comment-delete-btn"
+                            data-comment-id="${comment.commentId}"
+                            data-item-code="${comment.itemCode}">삭제</button>
+                ` : ''}
+            </div>
+        `;
+        commentSection.appendChild(newComment);
+    }
+
+    // 댓글 삭제
+    document.addEventListener("click", function (event) {
+        if (event.target.matches(".comment-delete-btn")) {
+            if (confirm("댓글을 삭제하시겠습니까?")) {
+                const commentId = event.target.getAttribute("data-comment-id");
+                const itemCode = event.target.getAttribute("data-item-code");
+
+                const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+                fetch(`/api/comments/delete`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        [csrfHeader]: csrfToken,
+                    },
+                    body: JSON.stringify({ commentId: commentId, itemCode: itemCode })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.redirect) {
+                            // 리다이렉트 응답이 있을 경우 해당 URL로 이동
+                            window.location.href = data.redirect;
+                        } else if (data.error) {
+                            alert("댓글 삭제에 실패했습니다: " + data.error);
+                        } else {
+                            alert("댓글이 삭제되었습니다.");
+                            event.target.closest(".comment-card").remove();
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("오류가 발생했습니다.");
+                    });
+            }
+        }
+    });
+
+
+    // 상품 삭제 버튼
+    document.getElementById('deleteBtn').addEventListener('click', function () {
+        if (confirm("상품을 삭제하시겠습니까?")) {
+            const itemCode = document.querySelector('input[name="itemCode"]').value;
+
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch(`/api/products/${itemCode}`, {
+                method: "DELETE",
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("상품이 삭제되었습니다.");
+                        window.location.href = "/products";
+                    } else {
+                        alert("삭제에 실패했습니다.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("오류가 발생했습니다.");
+                });
+        }
+    });
+
+    // 상품 수정 버튼
+    document.getElementById('updateBtn').addEventListener('click', function () {
+        const itemCode = document.querySelector('input[name="itemCode"]').value;
+        window.location.href = `/products/update/${itemCode}`;
+    });
+</script>
+
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+
+</html>

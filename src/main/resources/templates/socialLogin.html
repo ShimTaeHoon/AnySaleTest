@@ -1,0 +1,123 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Login</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            background-color: #f0f0f0;-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            height: 100vh;-->
+<!--            margin: 0;-->
+<!--        }-->
+
+<!--        .login-container {-->
+<!--            background-color: white;-->
+<!--            padding: 20px;-->
+<!--            border-radius: 5px;-->
+<!--            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);-->
+<!--            width: 300px;-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        label {-->
+<!--            display: block;-->
+<!--            margin-bottom: 5px;-->
+<!--        }-->
+
+<!--        input[type="text"],-->
+<!--        input[type="password"] {-->
+<!--            width: 100%;-->
+<!--            padding: 10px;-->
+<!--            margin-bottom: 15px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 3px;-->
+<!--            box-sizing: border-box;-->
+<!--        }-->
+
+<!--        button {-->
+<!--            width: 100%;-->
+<!--            padding: 10px;-->
+<!--            background-color: lightsalmon;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 3px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+<!--        button:hover {-->
+<!--            background-color: #45a049;-->
+<!--        }-->
+
+<!--        .error-message {-->
+<!--            color: red;-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 15px;-->
+<!--            font-size: 14px;-->
+<!--        }-->
+
+<!--        .social-login {-->
+<!--            text-align: center;-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+
+<!--        .social-login a {-->
+<!--            display: inline-block;-->
+<!--            margin-top: 10px;-->
+<!--            padding: 10px;-->
+<!--            background-color: #4285F4;-->
+<!--            color: white;-->
+<!--            border-radius: 3px;-->
+<!--            text-decoration: none;-->
+<!--            width: 100%;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        .social-login a:hover {-->
+<!--            background-color: #357ae8;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="login-container">-->
+<!--    <h1>로그인</h1>-->
+
+<!--    &lt;!&ndash; 로그인 실패 메시지 표시 &ndash;&gt;-->
+<!--    <div class="error-message">-->
+<!--        <span th:text="${param.error}"></span>-->
+<!--    </div>-->
+
+<!--    <form action="/login" method="post">-->
+<!--        <div>-->
+<!--            <label for="email">이메일:</label>-->
+<!--            <input type="text" id="email" name="username" required>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <label for="password">비밀번호:</label>-->
+<!--            <input type="password" id="password" name="password" required>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <input type="checkbox" id="remember" name="remember">-->
+<!--            <label for="remember">로그인 기억하기</label>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <button type="submit">로그인</button>-->
+<!--        </div>-->
+<!--    </form>-->
+
+<!--    <div class="social-login">-->
+<!--        <h2>소셜 로그인</h2>-->
+<!--        <p>아직 가입하지 않으셨나요? 소셜 로그인으로 간편하게 회원가입하세요!</p>-->
+<!--        <a href="/oauth2/authorization/google">Google로 로그인</a>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

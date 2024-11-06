@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- 헤더 -->
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
+
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">상품 수정하기</h1>
+    <form action="#" th:action="@{'/products/update/' + ${productDTO.itemCode}}" method="post" id="updateProductForm" enctype="multipart/form-data">
+        <!-- 제목 -->
+        <div class="mb-3">
+            <label for="title" class="form-label">상품 제목</label>
+            <input type="text" class="form-control" id="title" name="title" th:value="${productDTO.title}" required>
+        </div>
+
+        <!-- 가격 -->
+        <div class="mb-3">
+            <label for="price" class="form-label">가격</label>
+            <input type="number" class="form-control" id="price" name="price" th:value="${productDTO.price}" required>
+        </div>
+
+        <!-- 카테고리 -->
+        <div class="mb-3">
+            <label for="category" class="form-label">카테고리</label>
+            <select class="form-control" id="category" name="category" th:value="${productDTO.category}" required>
+                <option value="의류" th:selected="${productDTO.category == '의류'}">의류</option>
+                <option value="도서" th:selected="${productDTO.category == '도서'}">도서</option>
+                <option value="전자제품" th:selected="${productDTO.category == '전자제품'}">전자제품</option>
+            </select>
+        </div>
+
+        <!-- 설명 -->
+        <div class="mb-3">
+            <label for="content" class="form-label">상품 설명</label>
+            <textarea class="form-control" id="content" name="content" rows="3" required
+                      th:text="${productDTO.content}"></textarea>
+        </div>
+
+        <!-- 상태 -->
+        <div class="mb-3">
+            <label for="productCondition" class="form-label">상품 상태</label>
+            <select class="form-control" id="productCondition" name="productCondition"
+                    th:value="${productDTO.productCondition}" required>
+                <option value="최상" th:selected="${productDTO.productCondition == '최상'}">최상</option>
+                <option value="상" th:selected="${productDTO.productCondition == '상'}">상</option>
+                <option value="중" th:selected="${productDTO.productCondition == '중'}">중</option>
+                <option value="하" th:selected="${productDTO.productCondition == '하'}">하</option>
+            </select>
+        </div>
+
+        <!-- 이미지 업로드 -->
+        <div class="mb-3">
+            <label for="uploadFile" class="form-label">상품 이미지</label>
+
+            <!-- 기존 이미지 미리보기 (수정 페이지에서만) -->
+            <div class="mb-3" th:if="${productDTO.imageUrl != null}">
+                <img id="imagePreview" th:src="@{'/uploadfile/' + ${productDTO.imageUrl}}"
+                     class="img-fluid rounded shadow-sm"
+                     style="max-width: 300px; height: auto; object-fit: cover;"
+                     alt="이미지 미리보기"
+                     onerror="this.src='/uploadfile/default-image.png';">
+                <!-- 기존 이미지 URL을 서버로 전송하기 위한 hidden input -->
+                <input type="hidden" id="existingImageUrl" name="existingImageUrl" th:value="${productDTO.imageUrl}">
+
+            </div>
+
+            <!-- 파일 업로드 필드 -->
+            <input type="file" class="form-control" id="uploadFile" name="uploadFile" accept="image/*" onchange="previewImage(event)">
+        </div>
+
+        <script>
+            // 이미지 미리보기 기능 (업로드된 파일을 미리 보기)
+            function previewImage(event) {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    const output = document.getElementById('imagePreview');
+                    output.src = reader.result; // 새로 업로드한 이미지 미리보기
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        </script>
+
+        <!-- 거래 날짜 -->
+        <div class="mb-3">
+            <label for="dealDate" class="form-label">거래 날짜</label>
+            <input type="datetime-local" class="form-control" id="dealDate" name="dealDate" th:value="${formattedDealDate}" required>
+        </div>
+
+        <!-- 위치 -->
+        <div class="mb-3">
+            <label for="location" class="form-label">위치</label>
+            <input type="text" class="form-control" id="location" name="location" th:value="${productDTO.location}"
+                   required>
+        </div>
+
+        <!-- 상태 -->
+        <div class="mb-3">
+            <label for="status" class="form-label">상태</label>
+            <input type="text" class="form-control" id="status" name="status" th:value="${productDTO.status}" required>
+        </div>
+
+        <!-- 수정 버튼 -->
+        <button type="submit" class="btn btn-warning">수정</button>
+        <a href="/products/detail" class="btn btn-secondary">취소</a>
+    </form>
+</div>
+
+<!-- Footer -->
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+</body>
+
+</html>

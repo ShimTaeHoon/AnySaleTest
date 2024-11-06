@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- 헤더 부분 추가 -->
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
+<style>
+    /* 버튼 스타일 */
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .btn-outline-dark {
+        font-weight: bold;
+        border-radius: 25px;
+        color: #333;
+        box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #f9f9f9;
+        transition: 0.3s ease;
+        padding: 10px 20px; /* 버튼 패딩 추가 */
+        text-align: center; /* 텍스트 정렬 */
+        text-decoration: none; /* 텍스트 밑줄 제거 */
+    }
+
+    .btn-outline-dark:hover {
+        background-color: #D3D3D3;
+        color: #003366;
+    }
+</style>
+<body>
+<!-- 상품 추가 폼 -->
+<div class="container">
+    <h1>상품 추가하기</h1>
+    <form id="productForm" th:action="@{/products/add}" th:method="post" enctype="multipart/form-data">
+        <!-- 제목 입력 필드 추가 -->
+        <div class="mb-3">
+            <label for="title" class="form-label">상품 제목</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="상품 제목을 입력하세요" required>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">가격</label>
+            <input type="number" class="form-control" id="price" name="price" placeholder="가격을 입력하세요" required>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">카테고리</label>
+            <select class="form-control" id="category" name="category" required>
+                <option value="의류">의류</option>
+                <option value="도서">도서</option>
+                <option value="전자제품">전자제품</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea class="form-control" id="content" name="content" placeholder="상품 내용을 입력하세요" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="productCondition" class="form-label">상품 상태</label>
+            <select class="form-control" id="productCondition" name="productCondition" required>
+                <option value="최상">최상</option>
+                <option value="상">상</option>
+                <option value="중">중</option>
+                <option value="하">하</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="dealDate" class="form-label">거래 날짜</label>
+            <input type="datetime-local" class="form-control" id="dealDate" name="dealDate" required>
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">위치</label>
+            <input type="text" class="form-control" id="location" name="location" placeholder="상품 위치를 입력하세요" required>
+        </div>
+        <div class="mb-3">
+            <label for="userId" class="form-label">사용자 ID</label>
+            <input type="text" class="form-control" id="userId" name="userId" th:value="${member.id}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="uploadFile" class="form-label">이미지 업로드</label>
+            <input type="file" class="form-control" id="uploadFile" name="uploadFile" accept=".jpg,.jpeg,.png,.gif" required>
+        </div>
+        <button type="submit" class="btn btn-primary">추가하기</button>
+    </form>
+    <div id="resultMessage" class="mt-3"></div>
+</div>
+
+<!-- Footer 부분 추가 -->
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+
+<!-- 자바스크립트 추가 -->
+<script>
+    window.onload = function () {
+        let dealDateInput = document.getElementById('dealDate');
+        if (dealDateInput) {
+            const today = new Date();
+            today.setDate(today.getDate() + 1);
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const hours = String(today.getHours()).padStart(2, '0');
+            const minutes = String(today.getMinutes()).padStart(2, '0');
+            const defaultDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+            dealDateInput.value = defaultDate;
+        } else {
+            console.error('dealDateInput을 찾을 수 없습니다.');
+        }
+    };
+</script>
+</body>
+
+</html>

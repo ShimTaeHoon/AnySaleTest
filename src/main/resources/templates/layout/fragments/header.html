@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="headerFragment">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>AnySale - 이것도 팔아? </title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet" />
+  </head>
+  <body>
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-bottom: 1px solid #d1d1d1;">
+    <div class="container px-4 px-lg-5" style="background-color: #f8f9fa;"> <!-- 추가 스타일 -->
+      <a class="navbar-brand" href="#!">AnySale</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/products">Home</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">거래</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/products/add">상품 등록</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="/products">상품 목록</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">리뷰</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/review/list">리뷰 목록</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="/review/register">리뷰 등록</a></li>
+
+            </ul>
+          </li>
+        </ul>
+        <div th:if="${member == null or member.id == null}">
+          <a class="btn btn-outline-dark me-1" href="/member/login">
+            <i class="bi bi-person"></i> 로그인
+          </a>
+          &nbsp;
+          <a class="btn btn-outline-dark" href="/member/register">
+            <i class="bi bi-person"></i> 회원가입
+          </a>
+        </div>
+
+        <div th:if="${member != null and member.id != null}">
+          <span th:text="'안녕하세요, ' + ${member.id} + '님'"></span>  &nbsp
+          <a class="btn btn-outline-dark" href="/member/logout">
+            <i class="bi bi-person me-1"></i> 로그아웃
+          </a>
+          <a class="btn btn-outline-dark" href="/member/myPage">
+            <i class="bi bi-person me-1"></i> 마이페이지
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+  </body>
+</th:block>
+
+</html>

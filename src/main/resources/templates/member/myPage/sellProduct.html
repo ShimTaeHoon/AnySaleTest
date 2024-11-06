@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<!-- Header Fragment 포함 -->
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* 공통 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Montserrat", sans-serif;
+        }
+
+        body {
+            background-color: #ecf0f3;
+            color: #333;
+        }
+
+        /* 헤더 스타일 */
+        header.bg-dark {
+            background-color: #333;
+            color: white;
+        }
+
+        /* 카드 레이아웃 스타일 */
+        .card {
+            border-radius: 15px;
+            box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-img-top {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            object-fit: cover;
+            height: 200px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-footer {
+            background: none;
+            border-top: none;
+            padding: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">내 판매글 목록</h1>
+            <p class="lead fw-normal text-white-50 mb-0">내가 올린 상품을 확인하세요.</p>
+        </div>
+    </div>
+</header>
+
+<!-- Section for Products -->
+<section id="productSection" class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div id="productList" class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
+            <div th:each="product : ${products}" class="col mb-5">
+                <div class="card h-100">
+                    <img class="card-img-top p-1" th:src="@{/uploadfile/{imageUrl}(imageUrl=${product.imageUrl})}" alt="상품이미지" onerror="this.src='/uploadfile/default-image.png';" />
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder" th:text="${product.title}">상품 제목</h5>
+                            <p class="text-muted mb-0" th:text="${product.category}">카테고리</p>
+                            <p th:text="${product.content}">상품 설명</p>
+                            <span th:text="${#numbers.formatDecimal(product.price, 0, 0)} + ' 원'">가격</span>
+                        </div>
+                    </div>
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark mt-auto" th:href="@{/products/detail/{itemCode}(itemCode=${product.itemCode})}">자세히 보기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer Fragment 포함 -->
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+
+</body>
+</html>

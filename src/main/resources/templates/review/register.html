@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSRF 메타 데이터 -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>리뷰 게시판11</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
+
+    <style>
+        .star {
+            appearance: none;
+            padding: 1px;
+        }
+
+        .star::after {
+            content: '☆';
+            color: orange;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .star:hover::after {
+            content: '★';
+            color: orange;
+        }
+
+        .star:checked::after,
+        .star:has(~ .star:checked)::after {
+            content: '★';
+            color: orange;
+        }
+
+        /* 호버중일때 뒤의 별들을 끄기 a ~ b */
+        .star:hover ~ .star::after {
+            content: '☆';
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* 전체 화면을 채우기 위해 최소 높이 설정 */
+        }
+
+        .container {
+            flex: 1; /* 컨텐츠가 남은 공간을 채우도록 설정 */
+        }
+
+        footer {
+            background: #343a40; /* 다크 배경 색상 */
+            color: white;
+            text-align: center;
+            padding: 1rem; /* 패딩 추가 */
+            margin-top: 100px; /* 바디와 footer 간격 추가 */
+        }
+
+        /* 체크박스 형태로 변경 */
+        .custom-checkbox {
+            display: none; /* 기본 체크박스 숨기기 */
+        }
+
+        .custom-label {
+            display: flex;
+            align-items: center; /* 수직 정렬을 위해 추가 */
+            cursor: pointer; /* 커서 포인터 */
+            margin-right: 10px; /* 오른쪽 여백 */
+            position: relative; /* 체크 표시를 위한 상대 위치 설정 */
+        }
+
+        /* 선택된 상태의 텍스트 색상 */
+        .custom-checkbox:checked + .custom-label {
+            color: #007bff; /* 선택된 상태의 글자 색상 */
+        }
+
+        .custom-checkbox-input {
+            margin-right: 10px; /* 텍스트와의 간격 */
+            width: 20px; /* 체크박스 크기 */
+            height: 20px; /* 체크박스 크기 */
+            border: 2px solid #007bff; /* 체크박스 테두리 색상 */
+            border-radius: 4px; /* 체크박스 모서리 둥글게 */
+            display: inline-block; /* 인라인 블록으로 설정 */
+            position: relative; /* 상대 위치 설정 */
+        }
+
+        .custom-checkbox-input:after {
+            content: '';
+            position: absolute;
+            top: 50%; /* 수직 중앙 정렬 */
+            left: 50%; /* 수평 중앙 정렬 */
+            transform: translate(-50%, -50%); /* 중앙 정렬을 위한 변환 */
+            width: 10px; /* 체크 표시 크기 */
+            height: 10px; /* 체크 표시 크기 */
+            background: transparent; /* 체크 표시 배경 투명 */
+            border-radius: 4px; /* 체크 표시 모서리 둥글게 */
+        }
+
+        /* 체크 표시를 V로 변경 */
+        .custom-checkbox:checked + .custom-label .custom-checkbox-input:after {
+            content: '✔'; /* 체크 표시 V로 변경 */
+            color: #007bff; /* 체크 표시 색상 */
+            font-size: 18px; /* 체크 표시 크기 */
+            position: absolute;
+            top: 2px; /* 위치 조정 */
+            left: 3px; /* 위치 조정 */
+        }
+
+        /* 체크박스 색상 변경 방지 */
+        .custom-checkbox:checked + .custom-label .custom-checkbox-input {
+            border-color: transparent; /* 체크된 상태에서 테두리 색상 숨기기 */
+            background: transparent; /* 체크된 상태에서 배경색 숨기기 */
+        }
+
+        /* 버튼 스타일 */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-outline-dark {
+            font-weight: bold;
+            border-radius: 25px;
+            color: #333;
+            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #f9f9f9;
+            transition: 0.3s ease;
+            padding: 10px 20px; /* 버튼 패딩 추가 */
+            text-align: center; /* 텍스트 정렬 */
+            text-decoration: none; /* 텍스트 밑줄 제거 */
+        }
+
+        .btn-outline-dark:hover {
+            background-color: #D3D3D3;
+            color: #003366;
+        }
+
+    </style>
+</head>
+<body>
+</th:block>
+
+<div class="container my-5">
+
+    <!-- 리뷰 작성 폼 -->
+    <h2>리뷰 작성</h2>
+    <br>
+    <form id="reviewForm" action="/review/register" method="POST">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const reviewForm = document.getElementById('reviewForm');
+
+                reviewForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // 기본 폼 제출 방지
+
+                    // CSRF 토큰 가져오기
+                    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+                    const formData = new FormData(reviewForm);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', reviewForm.action, true);
+                    xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 토큰 설정
+
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                // 성공적인 응답 처리 (예: 리뷰 목록으로 이동)
+                                window.location.href = '/review/list';
+                            } else {
+                                // 에러 처리
+                                alert('리뷰 등록 중 문제가 발생했습니다: ' + xhr.statusText);
+                            }
+                        }
+                    };
+
+                    xhr.send(formData); // 폼 데이터 전송
+                });
+            });
+        </script>
+
+        <!-- 구매자 ID는 서버에서 자동으로 설정 -->
+        <input type="text" name="buyerId" th:value="${member.id}" readonly/> <!-- 예시: 로그인한 사용자 ID -->
+        <!--        <div class="form-group">-->
+        <!--            <label for="buyerId">구매자 ID</label>-->
+        <!--            <input type="text" class="form-control" id="buyerId" name="buyerId" required>-->
+        <!--        </div>-->
+        <div class="form-group">
+            <label for="sellerId">판매자 ID</label>
+            <input type="text" class="form-control" id="sellerId" name="sellerId" required>
+        </div>
+
+        <!-- 주소 선택 -->
+        <div class="form-group">
+            <label for="buyerAddressSelect">주소 선택</label>
+            <select id="buyerAddressSelect" name="buyerAddress" class="form-control" required>
+                <option value="">-- 선택 --</option>
+                <option value="서울 강남구">서울 강남구</option>
+                <option value="서울 종로구">서울 종로구</option>
+                <option value="부산 해운대구">부산 해운대구</option>
+                <option value="경기 수원시">경기 수원시</option>
+            </select>
+        </div>
+
+        <input type="hidden" name="buyerAddress" id="buyerAddress">
+
+        <div class="form-group">
+            <label for="comment">프로필</label>
+            <textarea class="form-control" id="buyerProfile" name="buyerProfile" rows="1" required>https://picsum.photos/50</textarea>
+        </div>
+
+        <div class="form-group">
+            <label style="font-size: 30px;" for="rating">별점을 매겨주세요!</label>
+            <div class="star-rating" id="rating">
+                <input type="radio" class="star" name="rating" value="1">
+                <input type="radio" class="star" name="rating" value="2">
+                <input type="radio" class="star" name="rating" value="3">
+                <input type="radio" class="star" name="rating" value="4">
+                <input type="radio" class="star" name="rating" value="5">
+            </div>
+        </div>
+
+        <!-- 체크박스 (칭찬) -->
+        <label style="font-size: 30px;" for="rating">좋았던 부분이 있나요?</label>
+        <div class="form-check">
+            <input class="custom-checkbox" type="checkbox" name="mannerCheck[]" value="물품 상태가 좋았어요." id="option1">
+            <label class="custom-label" for="option1">
+                <span class="custom-checkbox-input"></span>물품 상태가 좋았어요
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="custom-checkbox" type="checkbox" name="mannerCheck[]" value="배송 속도가 빨랐어요." id="option2">
+            <label class="custom-label" for="option2">
+                <span class="custom-checkbox-input"></span>배송 속도가 빨랐어요
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="custom-checkbox" type="checkbox" name="mannerCheck[]" value="시간 약속을 잘 지켜요." id="option3">
+            <label class="custom-label" for="option3">
+                <span class="custom-checkbox-input"></span>시간 약속을 잘지켜요
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="custom-checkbox" type="checkbox" name="mannerCheck[]" value="응답 속도가 빨랐어요." id="option4">
+            <label class="custom-label" for="option4">
+                <span class="custom-checkbox-input"></span>응답 속도가 빨랐어요.
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="custom-checkbox" type="checkbox" name="mannerCheck[]" value="나눔을 해주셨어요." id="option5">
+            <label class="custom-label" for="option5">
+                <span class="custom-checkbox-input"></span>나눔을 해주셨어요.
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label style="font-size: 30px">거래 후기를 남겨주세요!</label><br>
+            남겨주신 후기는 상대방의 프로필에 공개 됩니다.
+            <div class="form-group">
+                <label for="comment"></label>
+                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+            </div>
+        </div>
+
+        <script>
+            const stars = document.querySelectorAll('.star');
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    // 현재 체크된 별점이 변경되면, 다른 별점 체크를 해제
+                    stars.forEach(s => {
+                        s.checked = false; // 모든 별 체크 해제
+                    });
+
+                    star.checked = true; // 클릭한 별 체크
+                });
+            });
+        </script>
+        <button type="submit" class="btn btn-primary">리뷰 등록</button>
+        <button type="button" class="btn btn-primary" id="viewReviews">리뷰 목록</button>
+
+    </form>
+</div>
+
+<script>
+    document.getElementById('viewReviews').addEventListener('click', function() {
+        window.location.href = '/review/list'; // 리뷰 목록으로 이동
+    });
+</script>
+<!-- Footer-->
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+</th:block>
+</body>
+</html>

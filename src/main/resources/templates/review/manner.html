@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>매너칭찬 목록</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <th:block th:replace="layout/fragments/header :: headerFragment">
+  </th:block>
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* 전체 화면을 채우기 위해 최소 높이 설정 */
+    }
+
+    .container {
+      flex: 1; /* 컨텐츠가 남은 공간을 채우도록 설정 */
+    }
+
+    footer {
+      background: #343a40; /* 다크 배경 색상 */
+      color: white;
+      text-align: center;
+      padding: 1rem; /* 패딩 추가 */
+      margin-top: 100px; /* 바디와 footer 간격 추가 */
+    }
+
+    .links {
+      display: flex; /* 가로 정렬 */
+      margin-bottom: 1rem; /* 아래 여백 추가 */
+    }
+
+    .link {
+      color: black;
+      text-decoration: none; /* 기본 언더라인 제거 */
+      margin-right: 15px; /* 링크 간격 추가 */
+    }
+
+    .active-link {
+      color: #ff8c00; /* 주황색 */
+      font-weight: bold; /* 굵은 글씨 */
+
+    }
+
+    .link:hover {
+      color: inherit; /* 호버 시 색상 유지 */
+      color: #ff8c00;
+      text-decoration: underline; /* 호버 시 언더라인 추가 */
+    }
+
+    .manner-item {
+      border-bottom: 1px solid #dee2e6; /* 테두리 스타일 */
+      padding: 10px 0; /* 상하 여백 */
+    }
+
+    .manner-item:last-child {
+      border-bottom: none; /* 마지막 항목의 테두리 제거 */
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .seller-info {
+        flex-grow: 1; /* 남은 공간 차지 */
+    }
+
+    .seller-stats {
+        font-size: 0.9rem; /* 통계 글씨 크기 조정 */
+        text-align: right; /* 오른쪽 정렬 */
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="profile-header">
+        <!--        <img th:src="${판매자 타임리프}" alt="판매자 프로필" style="width: 70px; height: 70px; border-radius: 50%; display: inline-block; vertical-align: middle;">-->
+        <img src="https://picsum.photos/70" alt="판매자 프로필" style="width: 100px; height: 100px; border-radius: 50%; display: inline-block; vertical-align: middle;" class="profile-image">
+
+        <div class="seller-info">
+            <h1 th:text="${sellerId}">판매자 ID</h1>
+            <div class="seller-stats">
+                <!--                매너 온도: <span th:text="${매너온도 타임리프} + '36.5도'">36.5</span> |-->
+                <!--                재거래 희망률: <span th:text="${재거래희망률 타임리프} + '100%'">100%</span>-->
+                매너 온도: <span>36.5도</span> |
+                재거래 희망률: <span>100%</span>
+            </div>
+        </div>
+    </div>
+
+
+  <div class="links mb-4">
+    <a th:href="@{/review/onsale(sellerId=${sellerId})}" class="link">판매물품</a>
+    <a th:href="@{/review/seller/{sellerId}(sellerId=${sellerId})}"
+       class="link">거래후기 (<span th:text="${reviewCount}"></span>건)
+    </a>
+    <a th:href="@{/review/manner/{sellerId}(sellerId=${sellerId})}" class="link active-link">매너칭찬</a>
+  </div>
+
+  <div id="mannerList" class="mt-3">
+    <ul class="list-group">
+      <th:block th:each="review : ${list}">
+        <li class="list-group-item">
+<!--          <h5>-->
+<!--            <span th:text="'판매자: ' + ${review.sellerId}">판매자</span>-->
+<!--          </h5>-->
+          <div>
+
+            <img th:src="${review.buyerProfile}" alt="구매자 프로필" style="width: 50px; height: 50px; border-radius: 50%; display: inline-block; vertical-align: middle;">
+            <strong th:text="${review.buyerId}"></strong>
+            <span th:text="${review.buyerAddress}">지역</span><br>
+<!--            <div>-->
+<!--              <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>-->
+<!--            </div>-->
+            <th:block th:each="manner : ${review.mannerCheck}">
+<!--              <div class="manner-item" th:text="${manner} + ' (' + ${review.mannerCounts[manner]} + ')'"></div>-->
+              <div class="manner-item" th:text="${manner}"></div>
+            </th:block>
+          </div>
+        </li>
+      </th:block>
+    </ul>
+  </div>
+</div>
+
+<!-- Footer -->
+<th:block th:replace="layout/fragments/footer :: footerFragment">
+</th:block>
+
+</body>
+</html>

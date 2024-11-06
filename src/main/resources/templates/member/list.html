@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<body>
+<div>
+    <!-- 회원 목록을 Thymeleaf로 서버 사이드 렌더링 -->
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>전화번호</th>
+            <th>역할</th>
+            <th>평점</th>
+            <th>삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="memberDTO : ${list}">
+            <td th:text="${memberDTO.id}"></td>
+            <td th:text="${memberDTO.name}"></td>
+            <td th:text="${memberDTO.email}"></td>
+            <td th:text="${memberDTO.phone}"></td>
+            <td th:text="${memberDTO.role}"></td>
+            <td th:text="${memberDTO.score}"></td>
+            <td>
+                <form action="/member/remove" method="post" style="display: inline;">
+                    <input type="hidden" name="id" th:value="${memberDTO.id}" />
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+
+</html>

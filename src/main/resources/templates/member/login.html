@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>Login</title>
+    <style>
+        .main {
+            display: flex;
+            justify-content: center; /* 가로 가운데 정렬 */
+            margin-top: 50px; /* 페이지 상단 여백 */
+        }
+
+        .form {
+            background-color: white;
+            box-shadow: 10px 10px 10px #d1d9e6, -10px -10px 10px #f9f9f9;
+            padding: 20px; /* 패딩 추가 */
+            border-radius: 8px; /* 모서리 둥글게 */
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 16px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-danger {
+            background-color: lightgrey;
+            color: #721c24;
+            border: 1px solid #ffffff;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .div-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; /* 위쪽 여백 증가 */
+        }
+
+        .div-container form {
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .form__button:hover {
+            background-color: #C0C0C0;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="container" id="login-container">
+        <form class="form" id="login-form" action="/login" method="post">
+            <h2 class="form_title title">Sign in to Website</h2>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <div class="form__icons">
+                <!-- Icons omitted for brevity -->
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <p th:text="${errorMessage}"></p>
+            </div>
+            <div th:if="${successMessage}" class="alert alert-success">
+                <p th:utext="${successMessage}"></p>
+            </div>
+            <span class="form__span">or use your email to log in</span>
+            <input class="form__input" type="text" name="id" placeholder="ID" required>
+            <input class="form__input" type="password" name="password" placeholder="Password" required>
+            <button class="form__button button submit" type="submit">SIGN IN</button>
+        </form>
+        <div class="div-container">
+            <form action="/member/register" method="get">
+                <button class="form__button button submit" style="display: none;"></button>
+            </form>
+            <form action="/member/register" method="get">
+                <button type="submit" class="form__button button submit">회원가입</button>
+            </form>
+            <form action="/member/searchId" method="get">
+                <button type="submit" class="form__button button submit">아이디 찾기</button>
+            </form>
+            <form action="/member/searchPw" method="get">
+                <button type="submit" class="form__button button submit">비밀번호 찾기</button>
+            </form>
+            <!--소셜-->
+            <form action="/socialLogin" method="get">
+                <button type="submit" class="form__button button submit">소셜 로그인</button>
+            </form>
+
+            <div class="social-login">
+                <h2>소셜 로그인</h2>
+                <p>아직 가입하지 않으셨나요? 소셜 로그인으로 간편하게 회원가입하세요!</p>
+                <a href="/oauth2/authorization/google">Google로 로그인</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
+
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    /* 기본 스타일 리셋 */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      color: #343a40;
+    }
+
+    .main-container {
+      display: flex;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 15px;
+      gap: 20px;
+    }
+
+    /* 사이드바 스타일 */
+    .sidebar {
+      width: 250px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sidebar h3 {
+      font-size: 1.2rem;
+      color: #495057;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 10px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+
+    .sidebar a:hover {
+      color: #0056b3;
+    }
+
+    /* 메인 콘텐츠 스타일 */
+    .content-container {
+      flex: 1;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    h2.text-center {
+      font-weight: bold;
+      color: #495057;
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+    }
+
+    /* 회원 정보 카드 그리드 스타일 */
+    .card-grid {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .info-card {
+      flex: 1 1 calc(20% - 15px);
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .btn-group-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .btn-danger, .btn-secondary {
+      padding: 10px 20px;
+      font-weight: bold;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-danger {
+      background-color: #ff6b6b;
+    }
+
+    .btn-danger:hover {
+      background-color: #fa5252;
+    }
+
+    .btn-secondary {
+      background-color: #4dabf7;
+    }
+
+    .btn .btn-secondary {
+      border-radius: 25px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #339af0;
+    }
+
+    .btn-outline-dark {
+      font-weight: bold;
+      border-radius: 25px;
+      color: #333;
+      box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #f9f9f9;
+      transition: 0.3s ease;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn-outline-dark:hover {
+      background-color: #D3D3D3;
+      color: #003366;
+    }
+  </style>
+
+
+  <script>
+    function showMemberInfo() {
+      document.getElementById('member-info').style.display = 'flex';
+      document.getElementById('member-btn').style.display = 'flex';
+      document.getElementById('sell-product-info').style.display = 'none';
+    }
+
+    function showSellProductInfo() {
+      document.getElementById('member-info').style.display = 'none';
+      document.getElementById('member-btn').style.display = 'none';
+      document.getElementById('sell-product-info').style.display = 'block';
+    }
+
+    function soldOut() {
+      // 판매 완료 처리 로직을 여기에 추가하세요.
+    }
+  </script>
+</head>
+<body>
+<div class="main-container">
+  <aside class="sidebar">
+    <h3>마이페이지 메뉴</h3>
+    <ul>
+      <li><a href="javascript:void(0);" onclick="showMemberInfo()">회원 정보</a></li>
+      <li><a href="javascript:void(0);" onclick="showSellProductInfo()">회원 판매글 리스트</a></li>
+      <li><a href="#purchase-list">회원 구매글 리스트</a></li>
+      <li><a href="#like-list">좋아요 리스트</a></li>
+    </ul>
+  </aside>
+
+  <div class="content-container">
+    <h2 class="text-center">마이페이지</h2>
+
+    <!-- Information Card Grid -->
+    <div class="card-grid" id="member-info">
+      <div class="info-card">
+        <span class="material-icons">account_circle</span>
+        <div class="info-card-title">아이디</div>
+        <div class="info-card-text" th:text="${member.id}"></div>
+      </div>
+      <div class="info-card">
+        <span class="material-icons">badge</span>
+        <div class="info-card-title">이름</div>
+        <div class="info-card-text" th:text="${member.name}"></div>
+      </div>
+      <div class="info-card">
+        <span class="material-icons">email</span>
+        <div class="info-card-title">이메일</div>
+        <div class="info-card-text" th:text="${member.email}"></div>
+      </div>
+      <div class="info-card">
+        <span class="material-icons">phone</span>
+        <div class="info-card-title">전화번호</div>
+        <div class="info-card-text" th:text="${member.phone}"></div>
+      </div>
+      <div class="info-card">
+        <span class="material-icons">star</span>
+        <div class="info-card-title">평점</div>
+        <div class="info-card-text" th:text="${member.score}"></div>
+      </div>
+    </div>
+
+    <!-- Separate Button Group -->
+    <div class="btn-group-container" id="member-btn">
+      <form id="deleteForm" action="/member/remove" method="post">
+        <input type="hidden" name="id" th:value="${member.id}" />
+        <button type="button" id="deleteBtn" class="btn btn-danger" onclick="confirmDelete()">회원 탈퇴</button>
+      </form>
+
+      <a th:href="@{/member/modify(id=${member.id})}" class="btn btn-secondary">회원 수정</a>
+    </div>
+
+    <script>
+      function confirmDelete() {
+        if (confirm('정말로 회원 탈퇴하시겠습니까?')) {
+          const deleteForm = document.getElementById('deleteForm');
+
+          // CSRF 토큰 가져오기
+          const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+          const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+          const formData = new FormData(deleteForm);
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', deleteForm.action, true);
+          xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 토큰 설정
+
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                // 성공적인 응답 처리 (예: 메인 페이지로 이동)
+                window.location.href = '/';
+              } else {
+                // 에러 처리
+                alert('회원 탈퇴 중 문제가 발생했습니다: ' + xhr.statusText);
+              }
+            }
+          };
+
+          xhr.send(formData); // 폼 데이터 전송
+        }
+      }
+    </script>
+
+    <!-- 판매글 정보 카드 그리드 (초기에는 숨김) -->
+    <div class="card-grid" id="sell-product-info" style="display: none;">
+      <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+          <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">내 판매글 목록</h1>
+            <p class="lead fw-normal text-white-50 mb-0">내가 올린 상품을 확인하세요.</p>
+          </div>
+        </div>
+      </header>
+      <section id="productSection" class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+          <div id="productList" class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
+            <div th:each="product : ${products}" class="col mb-5">
+              <div class="card h-100">
+                <img class="card-img-top p-1" th:src="@{/uploadfile/{imageUrl}(imageUrl=${product.imageUrl})}" alt="상품이미지" onerror="this.src='/uploadfile/default-image.png';" />
+                <div class="card-body p-4">
+                  <div class="text-center">
+                    <h5 class="fw-bolder" th:text="${product.title}" >상품 제목</h5>
+                    <p class="text-muted mb-0" th:text="${product.category}">카테고리</p>
+                    <p th:text="${product.content}">상품 설명</p>
+                    <span th:text="${#numbers.formatDecimal(product.price, 0, 0)} + ' 원'">가격</span>
+                  </div>
+                </div>
+                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                  <div class="text-center">
+                    <button class="btn btn-outline-dark mt-auto" onclick="soldOut()">판매 완료</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>
+  <th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+
+</body>
+
+</html>

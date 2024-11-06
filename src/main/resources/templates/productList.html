@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>중고 거래 게시판</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">중고 거래 게시판</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">상품 등록</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1 class="mb-4">중고 거래 상품 목록</h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div th:each="product : ${products}" class="col">
+            <div class="card h-100 shadow-sm">
+                <img th:src="${product.imageUrl}" class="card-img-top" alt="상품 이미지">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.content}"></h5>
+                    <p class="card-text">
+                        <strong>가격:</strong> <span th:text="${product.price} + '원'"></span><br>
+                        <strong>카테고리:</strong> <span th:text="${product.category}"></span><br>
+                        <strong>상태:</strong> <span th:text="${product.productCondition}"></span><br>
+                        <strong>위치:</strong> <span th:text="${product.location}"></span>
+                    </p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <small class="text-muted" th:text="|등록일: ${T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm').format(product.regDate)}|"></small>
+
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-envelope"></i> 문의하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>판매자 리뷰 목록</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <th:block th:replace="layout/fragments/header :: headerFragment"></th:block>
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      flex: 1;
+    }
+
+    footer {
+      background: #343a40;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 100px;
+    }
+
+    .links {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+
+    .link {
+      color: black;
+      text-decoration: none;
+      margin-right: 15px;
+    }
+
+    .active-link {
+      color: #ff8c00;
+      font-weight: bold;
+    }
+
+    .link:hover {
+      color: inherit;
+      color: #ff8c00;
+      text-decoration: underline;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .seller-info {
+      flex-grow: 1;
+    }
+
+    .seller-stats {
+      font-size: 0.9rem;
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container mt-5">
+  <div class="profile-header">
+    <img src="https://picsum.photos/70" alt="판매자 프로필" style="width: 100px; height: 100px; border-radius: 50%; display: inline-block; vertical-align: middle;" class="profile-image">
+
+    <div class="seller-info">
+<!--      <h1 th:text="${sellerId}">판매자 ID</h1>-->
+      <h1>배주환</h1>
+      <div class="seller-stats">
+        매너 온도: <span>36.5도</span> |
+        재거래 희망률: <span>100%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="links mb-4">
+    <a th:href="@{/review/onsale(sellerId=${sellerId})}" class="link active-link">판매물품</a>
+    <a th:href="@{/review/seller/{sellerId}(sellerId=${sellerId})}" class="link">거래후기 (<span th:text="${reviewCount}"></span>건)</a>
+    <a th:href="@{/review/manner/{sellerId}(sellerId=${sellerId})}" class="link">매너칭찬</a>
+  </div>
+
+<!--  <h2>판매 물품</h2>-->
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <img src="https://picsum.photos/200/200?random=1" class="card-img-top" alt="상품 이미지">
+        <div class="card-body">
+          <h5 class="card-title">상품 제목 1</h5>
+          <p class="card-text">가격: ₩10,000</p>
+          <p class="card-text">지역: 서울</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <img src="https://picsum.photos/200/200?random=2" class="card-img-top" alt="상품 이미지">
+        <div class="card-body">
+          <h5 class="card-title">상품 제목 2</h5>
+          <p class="card-text">가격: ₩15,000</p>
+          <p class="card-text">지역: 부산</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <img src="https://picsum.photos/200/200?random=3" class="card-img-top" alt="상품 이미지">
+        <div class="card-body">
+          <h5 class="card-title">상품 제목 3</h5>
+          <p class="card-text">가격: ₩20,000</p>
+          <p class="card-text">지역: 대구</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <img src="https://picsum.photos/200/200?random=4" class="card-img-top" alt="상품 이미지">
+        <div class="card-body">
+          <h5 class="card-title">상품 제목 4</h5>
+          <p class="card-text">가격: ₩25,000</p>
+          <p class="card-text">지역: 인천</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <img src="https://picsum.photos/200/200?random=4" class="card-img-top" alt="상품 이미지">
+        <div class="card-body">
+          <h5 class="card-title">상품 제목 5</h5>
+          <p class="card-text">가격: ₩30,000</p>
+          <p class="card-text">지역: 대전</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <img src="https://picsum.photos/200/200?random=4" class="card-img-top" alt="상품 이미지">
+        <div class="card-body">
+          <h5 class="card-title">상품 제목 6</h5>
+          <p class="card-text">가격: ₩70,000</p>
+          <p class="card-text">지역: 제주</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<th:block th:replace="layout/fragments/footer :: footerFragment"></th:block>
+</body>
+</html>
